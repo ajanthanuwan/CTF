@@ -1,2 +1,3 @@
 nmap -sC -sV -oA nmap/ctf 10.4.25.246
-
+nmap -Pn 10.0.30.43  #icmp desabled servers port scan)
+nmap -Pn -sV -p 10.0.30.43 # scan the filter port by fileter OS firewall or firewall.
