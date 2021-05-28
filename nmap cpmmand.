@@ -1,0 +1,2 @@
+nmap -sC -sV -oA nmap/ctf 10.4.25.246
+
